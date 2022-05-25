@@ -38,15 +38,15 @@ class UserRepository {
     return new Promise((resolve, reject) => {
       connection.query(
         `UPDATE users
-        SET first_name = '${user.name}',
-        last_name = '${user.surname}',
-        age = ${user.age},
-        email = '${user.email}',
-        phone_number = ${user.tel},
-        user_role = '${user.role}',
-        user_password = '${user.password}'
+        SET first_name = ?,
+        last_name = ?,
+        age = ?,
+        email = ?,
+        phone_number = ?,
+        user_role = ?,
+        user_password = ?
         WHERE user_id = ?`,
-        [id],
+        [user.name, user.surname, user.age, user.email, user.tel, user.role, user.password, id],
         (error, results, fields) => {
           if (error) {
             console.log(error);
@@ -76,7 +76,8 @@ class UserRepository {
     return new Promise((resolve, reject) => {
       connection.query(
         `INSERT INTO users (first_name, last_name, age, email, phone_number, user_role, user_password)
-        VALUES ('${user.name}', '${user.surname}', ${user.age}, '${user.email}', ${user.tel}, '${user.role}', '${user.password}')`,
+        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [user.name, user.surname, user.age, user.email, user.tel, user.role, user.password],
         (error, results, fields) => {
           if (error) {
             console.log(error);
