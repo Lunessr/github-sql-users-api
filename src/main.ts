@@ -5,7 +5,6 @@ import * as bodyParser from 'body-parser';
 import { tokenValidation } from './modules/middlewares/authMiddleware';
 import { router } from './routes';
 import * as mysql from 'mysql';
-import * as process from 'process';
 
 const server = express();
 dotenv.config();

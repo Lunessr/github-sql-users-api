@@ -11,10 +11,8 @@ class UsersFactory {
         return adminUserService;
       case Role.CUSTOMER:
         return customerUserService;
-      case undefined:
-        return customerUserService;
       default:
-        throw new Error('No such role');
+        return customerUserService;
     }
   }
 }

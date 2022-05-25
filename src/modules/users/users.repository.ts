@@ -6,7 +6,7 @@ import { connection } from '../../main';
 class UserRepository {
   async findByEmail(email: User['email']): Promise<User> {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM users WHERE email = '${email}'`, function (error, results, fields) {
+      connection.query(`SELECT * FROM users WHERE email = ?`, [email], function (error, results, fields) {
         if (error) {
           console.log(error);
           return reject(error);
@@ -21,7 +21,7 @@ class UserRepository {
 
   async findById(id: User['id']): Promise<User | null> {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM users WHERE user_id=${id}`, function (error, results, fields) {
+      connection.query(`SELECT * FROM users WHERE user_id = ?`, [id], function (error, results, fields) {
         if (error) {
           console.log(error);
           return reject(error);
@@ -45,7 +45,8 @@ class UserRepository {
         phone_number = ${user.tel},
         user_role = '${user.role}',
         user_password = '${user.password}'
-        WHERE user_id=${id}`,
+        WHERE user_id = ?`,
+        [id],
         (error, results, fields) => {
           if (error) {
             console.log(error);
@@ -60,7 +61,7 @@ class UserRepository {
 
   delete(id: User['id']): Promise<void> {
     return new Promise((resolve, reject) => {
-      connection.query(`DELETE FROM users WHERE user_id=${id}`, function (error, results, fields) {
+      connection.query(`DELETE FROM users WHERE user_id = ?`, [id], function (error, results, fields) {
         if (error) {
           console.log(error);
           return reject(error);
