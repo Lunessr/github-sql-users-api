@@ -35,8 +35,9 @@ const getUsers = async (req, res): Promise<void> => {
   try {
     const userService = usersFactory.chooseUserService(req.user);
     const users = await userService.find({
-      filterBy,
-      filterText,
+      filter: {
+        [filterBy]: filterText,
+      },
       sortBy,
       direction,
       limit: Number(limit),

@@ -5,6 +5,7 @@ import { ERROR_MESSAGES } from '../../errors';
 import { UserParameters } from './interfaces/parameters';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { Role } from '../../enums/role';
 
 class AdminUserService implements IUserService {
   async create(user: UserWithoutId): Promise<User> {
@@ -25,8 +26,8 @@ class AdminUserService implements IUserService {
   }
 
   async find(parameters: UserParameters): Promise<User[]> {
-    const { filterBy, filterText, sortBy, direction, limit, skip } = parameters;
-    return userRepository.findAndSort({ filterBy, filterText, sortBy, direction, limit, skip });
+    const { filter, sortBy, direction = 'DESC', limit = 3, skip = 0 } = parameters;
+    return userRepository.findAndSort({ filter: { ...filter }, sortBy, direction, limit, skip });
   }
 
   async update(callerUser: User, idUserToUpdate: User['id'], userToUpdate: User): Promise<User> {

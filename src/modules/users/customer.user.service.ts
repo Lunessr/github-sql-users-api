@@ -31,8 +31,14 @@ class CustomerUserService implements IUserService {
   }
 
   async find(parameters: UserParameters): Promise<User[]> {
-    const { filterBy, filterText, sortBy, direction, limit, skip } = parameters;
-    let existingUsers = await userRepository.findAndSort({ filterBy, filterText, sortBy, direction, limit, skip });
+    const { filter, sortBy = 'first_name', direction, limit = 3, skip = 0 } = parameters;
+    let existingUsers = await userRepository.findAndSort({
+      filter: { user_role: Role.CUSTOMER, ...filter },
+      sortBy,
+      direction,
+      limit,
+      skip,
+    });
     return existingUsers.filter((user) => user.role === Role.CUSTOMER);
   }
 
