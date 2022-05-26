@@ -93,10 +93,8 @@ class UserRepository {
   async findAndSort(parameters: UserParameters): Promise<User[]> {
     return new Promise((resolve, reject) => {
       let query = 'SELECT * FROM users';
-
       if (parameters.filter) {
-        let filterArr = Object.entries(parameters.filter);
-        query = filterArr.reduce((acc, [k, v], index) => {
+        query = Object.entries(parameters.filter).reduce((acc, [k, v], index) => {
           if (index === 0) {
             acc += ` WHERE ${k} = '${v}'`;
           } else {

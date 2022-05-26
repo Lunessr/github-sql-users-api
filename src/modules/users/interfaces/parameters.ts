@@ -1,5 +1,4 @@
 export interface UserParameters {
-  // optional parameters TS
   filter?: {
     user_role?: 'Admin' | 'Customer';
     email?: string;

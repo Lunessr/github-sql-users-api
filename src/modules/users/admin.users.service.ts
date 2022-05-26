@@ -27,7 +27,7 @@ class AdminUserService implements IUserService {
 
   async find(parameters: UserParameters): Promise<User[]> {
     const { filter, sortBy, direction = 'DESC', limit = 3, skip = 0 } = parameters;
-    return userRepository.findAndSort({ filter: { ...filter }, sortBy, direction, limit, skip });
+    return userRepository.findAndSort({ filter, sortBy, direction, limit, skip });
   }
 
   async update(callerUser: User, idUserToUpdate: User['id'], userToUpdate: User): Promise<User> {
