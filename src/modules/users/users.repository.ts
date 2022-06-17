@@ -6,7 +6,7 @@ import { connection } from '../../main';
 class UserRepository {
   async findByEmail(email: User['email']): Promise<User> {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM users WHERE email = ?`, [email], function (error, results, fields) {
+      connection.query(`SELECT * FROM users WHERE email = ?`, [email], function (error, results) {
         if (error) {
           console.log(error);
           return reject(error);
@@ -21,7 +21,7 @@ class UserRepository {
 
   async findById(id: User['id']): Promise<User | null> {
     return new Promise((resolve, reject) => {
-      connection.query(`SELECT * FROM users WHERE user_id = ?`, [id], function (error, results, fields) {
+      connection.query(`SELECT * FROM users WHERE user_id = ?`, [id], function (error, results) {
         if (error) {
           console.log(error);
           return reject(error);
@@ -47,7 +47,7 @@ class UserRepository {
         user_password = ?
         WHERE user_id = ?`,
         [user.name, user.surname, user.age, user.email, user.tel, user.role, user.password, id],
-        (error, results, fields) => {
+        (error) => {
           if (error) {
             console.log(error);
             return reject(error);
@@ -78,7 +78,7 @@ class UserRepository {
         `INSERT INTO users (first_name, last_name, age, email, phone_number, user_role, user_password)
         VALUES (?, ?, ?, ?, ?, ?, ?)`,
         [user.name, user.surname, user.age, user.email, user.tel, user.role, user.password],
-        (error, results, fields) => {
+        (error) => {
           if (error) {
             console.log(error);
             return reject(error);
@@ -93,8 +93,15 @@ class UserRepository {
   async findAndSort(parameters: UserParameters): Promise<User[]> {
     return new Promise((resolve, reject) => {
       let query = 'SELECT * FROM users';
-      if (parameters.filterBy && parameters.filterText) {
-        query += ` WHERE ${parameters.filterBy} = ${parameters.filterText}`;
+      if (parameters.filter) {
+        query = Object.entries(parameters.filter).reduce((acc, [k, v], index) => {
+          if (index === 0) {
+            acc += ` WHERE ${k} = '${v}'`;
+          } else {
+            acc += ` AND ${k} = '${v}'`;
+          }
+          return acc;
+        }, query);
       }
       if (parameters.sortBy && parameters.direction) {
         query += ` ORDER BY ${parameters.sortBy} ${parameters.direction}`;
@@ -105,7 +112,7 @@ class UserRepository {
       if (parameters.skip) {
         query += ` OFFSET ${parameters.skip}`;
       }
-      connection.query(query, function (error, results, fields) {
+      connection.query(query, function (error, results) {
         if (error) {
           console.log(error);
           return reject(error);
